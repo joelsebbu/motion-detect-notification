@@ -1,0 +1,23 @@
+# Ignore build output
+OpenPalmApp/build/
+OpenPalmApp/app/build/
+
+# Ignore IDE configs
+OpenPalmApp/.idea/
+OpenPalmApp/*.iml
+
+# Ignore OS files
+OpenPalmApp/.DS_Store
+
+# Local config files
+OpenPalmApp/local.properties
+
+# Gradle & cache
+OpenPalmApp/.gradle/
+OpenPalmApp/.cxx/
+OpenPalmApp/.externalNativeBuild/
+OpenPalmApp/captures/
+
+# Compose preview & Kotlin module
+OpenPalmApp/.compose-cache/
+OpenPalmApp/*.kotlin_module
