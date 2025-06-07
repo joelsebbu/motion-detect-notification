@@ -25,3 +25,4 @@ OpenPalmApp/*.kotlin_module
 # Ignore zips
 
 OpenPalmBE/*.zip
+OpenPalmBE/BE_venv
