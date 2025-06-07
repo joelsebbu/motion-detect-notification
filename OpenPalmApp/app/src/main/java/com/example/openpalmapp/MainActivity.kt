@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.ui.Alignment
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -14,11 +15,12 @@ import com.example.openpalmapp.ui.components.EmailInput
 import com.example.openpalmapp.ui.theme.OpenPalmAppTheme
 // for submit button
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 import androidx.compose.runtime.rememberCoroutineScope
 
 // for camera Button
 import com.example.openpalmapp.ui.components.OpenCameraButton
+// for api service
+import com.example.openpalmapp.network.sendEmailToApiGateway
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,39 +42,57 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     var email by remember { mutableStateOf("") }
+    val snackbarHostState = remember { SnackbarHostState() }
     var isLoading by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = "Hello $name!",
-            style = MaterialTheme.typography.headlineMedium
+    Box(modifier = modifier.fillMaxSize()) {
+        // 👆 Snackbar at the top
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 32.dp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Hello $name!",
+                style = MaterialTheme.typography.headlineMedium
+            )
 
-        EmailInput(
-            email = email,
-            onEmailChange = { email = it },
-            modifier = Modifier.fillMaxWidth(),
-            isLoading = isLoading,
-            onSubmit = {
-                coroutineScope.launch {
-                    isLoading = true
-                    delay(2000)
-                    isLoading = false
+            Spacer(modifier = Modifier.height(24.dp))
+
+            EmailInput(
+                email = email,
+                onEmailChange = { email = it },
+                modifier = Modifier.fillMaxWidth(),
+                isLoading = isLoading,
+                onSubmit = {
+                    coroutineScope.launch {
+                        isLoading = true
+                        val success = sendEmailToApiGateway(email)
+                        isLoading = false
+
+                        val message = if (success) {
+                            "✅ Email sent successfully"
+                        } else {
+                            "❌ Failed to send email"
+                        }
+                        snackbarHostState.showSnackbar(message)
+                    }
                 }
-            }
-        )
+            )
 
-        Spacer(modifier = Modifier.height(56.dp))
+            Spacer(modifier = Modifier.height(56.dp))
 
-        OpenCameraButton(modifier = Modifier.fillMaxWidth())
+            OpenCameraButton(modifier = Modifier.fillMaxWidth())
+        }
     }
 }
 
