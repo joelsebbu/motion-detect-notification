@@ -17,6 +17,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import androidx.compose.runtime.rememberCoroutineScope
 
+// for camera Button
+import com.example.openpalmapp.ui.components.OpenCameraButton
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +69,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 }
             }
         )
+
+        Spacer(modifier = Modifier.height(56.dp))
+
+        OpenCameraButton(modifier = Modifier.fillMaxWidth())
     }
 }
 
