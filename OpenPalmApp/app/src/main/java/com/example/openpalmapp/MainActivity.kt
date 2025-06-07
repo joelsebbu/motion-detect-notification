@@ -76,13 +76,13 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                 onSubmit = {
                     coroutineScope.launch {
                         isLoading = true
-                        val success = sendEmailToApiGateway(email)
+                        val result = sendEmailToApiGateway(email)
                         isLoading = false
 
-                        val message = if (success) {
-                            "✅ Email sent successfully"
-                        } else {
-                            "❌ Failed to send email"
+                        val message = when {
+                            !result.success -> "❌ ${result.message}"
+                            result.emailSent -> "✅ ${result.message}"
+                            else -> "ℹ️ ${result.message}"
                         }
                         snackbarHostState.showSnackbar(message)
                     }
