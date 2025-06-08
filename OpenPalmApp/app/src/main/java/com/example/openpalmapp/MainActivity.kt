@@ -11,16 +11,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.openpalmapp.ui.components.EmailInput
 import com.example.openpalmapp.ui.theme.OpenPalmAppTheme
 // for submit button
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
-
 // for camera Button
 import com.example.openpalmapp.ui.components.OpenCameraButton
 // for api service
-import com.example.openpalmapp.network.sendEmailToApiGateway
+import com.example.openpalmapp.ui.sections.EmailSection
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,25 +65,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            EmailInput(
-                email = email,
-                onEmailChange = { email = it },
+            EmailSection(
                 modifier = Modifier.fillMaxWidth(),
-                isLoading = isLoading,
-                onSubmit = {
-                    coroutineScope.launch {
-                        isLoading = true
-                        val result = sendEmailToApiGateway(email)
-                        isLoading = false
-
-                        val message = when {
-                            !result.success -> "❌ ${result.message}"
-                            result.emailSent -> "✅ ${result.message}"
-                            else -> "ℹ️ ${result.message}"
-                        }
-                        snackbarHostState.showSnackbar(message)
-                    }
-                }
+                snackbarHostState = snackbarHostState
             )
 
             Spacer(modifier = Modifier.height(56.dp))

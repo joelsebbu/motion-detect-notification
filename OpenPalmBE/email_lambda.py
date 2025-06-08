@@ -2,9 +2,10 @@ import boto3
 import json
 import os
 
-# Read sender email from environment variable
+# load environment variables
 SENDER_EMAIL = os.environ.get('SES_SENDER_EMAIL')
 EMAIL_REGION = os.environ.get('SES_EMAIL_REGION')
+SECRET_API_KEY = os.environ.get('SECRET_API_KEY')
 
 # Set up SES client
 ses = boto3.client('ses', region_name=EMAIL_REGION)
@@ -16,6 +17,15 @@ def lambda_handler(event, context):
     try:
         body = json.loads(event.get('body', '{}'))
         email = body.get('email')
+        headers = event.get("headers", {})
+        api_key = headers.get("x-api-key")
+
+        if api_key != SECRET_API_KEY:
+            print("[LOG_ERROR] Unauthenticated Email Request")
+            return {
+                "statusCode": 403,
+                "body": json.dumps({"error": "Forbidden: Invalid API key"})
+            }
 
         print(f"[LOG_INPUT] Parsed email: {email}")
 

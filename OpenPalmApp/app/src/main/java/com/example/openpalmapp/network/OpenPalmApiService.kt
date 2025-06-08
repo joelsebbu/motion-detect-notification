@@ -26,6 +26,7 @@ suspend fun sendEmailToApiGateway(email: String): EmailSendResult = withContext(
 
         val request = Request.Builder()
             .url(BuildConfig.EMAIL_API_URL)
+            .addHeader("x-api-key", BuildConfig.SECRET_API_KEY)
             .post(body)
             .build()
 

@@ -29,7 +29,11 @@ android {
             "\"${localProperties["EMAIL_API_URL"]}\""
         )
         buildConfigField("String", "DUMMY", "\"debug\"")
-
+        buildConfigField(
+            "String",
+            "SECRET_API_KEY",
+            "\"${localProperties["SECRET_API_KEY"]}\""
+        )
     }
 
     buildTypes {
